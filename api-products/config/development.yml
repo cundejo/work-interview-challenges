@@ -1,0 +1,7 @@
+db:
+  host: '127.0.0.1'
+  port: '54320'
+  username: 'postgres'
+  password: 'my_password'
+  database: 'assignment'
+  synchronize: true

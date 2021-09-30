@@ -1,0 +1,8 @@
+server:
+  port: 3000
+
+db:
+  type: 'postgres'
+
+thirdPartyApis:
+  currencyExchange: 'https://currency-api-mock.highbond-s3.com/live'
