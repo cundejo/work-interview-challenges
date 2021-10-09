@@ -1,9 +1,5 @@
 function solution(A) {
-  const sortNumbers = (a, b) => {
-    return a - b;
-  };
-
-  const aSorted = A.sort(sortNumbers);
+  const aSorted = A.sort((a,b)=>a-b);
 
   if (aSorted[0] !== 1) return 1;
 
