@@ -20,4 +20,12 @@ export const GlobalStyles = createGlobalStyle`
     font-family: sans-serif;
     transition: all 0.25s linear;
   }
+
+  a{
+    color: ${({ theme }) => theme.text};
+
+    &:hover, &:active, &:focus{
+      color: cornflowerblue;
+    }
+  }
 `;

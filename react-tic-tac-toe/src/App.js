@@ -25,7 +25,9 @@ function App() {
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <GlobalStyles />
-      <ThemeButton onClick={()=>toggleTheme()}>{theme === 'light' ? 'Change to dark theme 🌙' : 'Change to light theme ☀️'}</ThemeButton>
+      <ThemeButton onClick={()=>toggleTheme()}>
+        {theme === 'light' ? 'Change to dark theme ☽' : 'Change to light theme ☀'}
+      </ThemeButton>
       <Game />
     </ThemeProvider>
   )
