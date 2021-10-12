@@ -13,6 +13,8 @@ const ThemeButton = styled.button`
   color: ${({ theme }) => theme.text};
   cursor: pointer;
   padding: 5px;
+  font-size: 2em;
+  text-shadow: 0 0 3px grey;
 `;
 
 function App() {
@@ -26,7 +28,7 @@ function App() {
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <GlobalStyles />
       <ThemeButton onClick={()=>toggleTheme()}>
-        {theme === 'light' ? 'Change to dark theme ☽' : 'Change to light theme ☀'}
+        {theme === 'light' ? '🌙' : '☀️'}
       </ThemeButton>
       <Game />
     </ThemeProvider>
