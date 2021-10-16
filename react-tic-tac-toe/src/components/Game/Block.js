@@ -23,7 +23,7 @@ const StyledBlock = styled.div`
 const Block = ({value, index, onClick}) => {
 
   return (
-    <StyledBlock onClick={() => onClick(index)}>
+    <StyledBlock data-testid={index} onClick={() => onClick(index)}>
       <span>
         {value}
       </span>
