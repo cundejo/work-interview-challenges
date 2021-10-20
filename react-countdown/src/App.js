@@ -1,80 +1,83 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 
-const getSeconds=(inputMin, inputSec)=>60*Number(inputMin)+Number(inputSec);
+const CLOCK_STATE= {
+  STOPPED: 'STOPPED',
+  RUNNING: 'RUNNING',
+}
 
-const Clock = ({totalOfSeconds})=> {
-  if(totalOfSeconds<0) return '00:00'
-  const minutes = String(Math.floor(totalOfSeconds / 60)).padStart(2, '0');
-  const seconds = String(totalOfSeconds % 60).padStart(2, '0');
+const INITIAL_SECONDS = 0;
 
-  return (
-    <Fragment>
-      {minutes}:{seconds}
-    </Fragment>
-  )
+const getTotalOfSeconds = (mins, seconds) => Number(mins) * 60 + Number(seconds);
 
+const getMinutesAndSeconds = (totalOfSeconds) => {
+  const minutes = String(parseInt(totalOfSeconds / 60)).padStart(2,'0');
+  const seconds = String(totalOfSeconds % 60).padStart(2,'0');
+  return {minutes, seconds};
+}
+
+function useInput(initialValue){
+  const [value, setValue] = useState(initialValue);
+  return {value, onChange: (e)=> setValue(e.target.value), reset: (v)=>setValue(v)};
+}
+
+function useChronometer(initialSeconds){
+  const [seconds, setSeconds] = useState(initialSeconds);
+  const [state, setState] = useState(CLOCK_STATE.STOPPED);
+
+  useEffect(() => {
+    if(state === CLOCK_STATE.RUNNING){
+      const intervalId = setInterval(()=>setSeconds(prev => prev - 1), 1000);
+      return () => clearInterval(intervalId);
+    }
+  }, [state])
+
+  return {seconds, setSeconds, state, setState };
+}
+
+function Clock({seconds}) {
+  if(seconds <= 0 ) return <h1>00:00</h1>;
+
+  const {minutes: mins, seconds: secs} = getMinutesAndSeconds(seconds);
+
+  return <h1>
+    {mins}:{secs}
+  </h1>
 }
 
 function App() {
-  const [countdownState, setCountdownState] = useState('STOPPED');
-  const [seconds, setSeconds] = useState(0);
-  const [inputMinutes, setInputMinutes] = useState(0);
-  const [inputSeconds, setInputSeconds] = useState(0);
+  const minutesInput = useInput(INITIAL_SECONDS);
+  const secondsInput = useInput(INITIAL_SECONDS);
+  const {seconds, setSeconds, state, setState} = useChronometer(INITIAL_SECONDS)
 
-  useEffect(()=> {
-    if(countdownState !== 'STARTED') return;
-
-    if(seconds === 0){
-      setCountdownState('STOPPED');
-      return;
-    }
-
-    setTimeout(()=>{
-      setSeconds(prev => prev - 1);
-    }, 1000);
-
-  }, [seconds, countdownState])
-
-  const handleStart = () =>{
-    if(countdownState === 'STARTED') {
-      setSeconds(getSeconds(inputMinutes, inputSeconds))
-      return;
-    }
-    if(countdownState !== 'STOPPED') return;
-    setCountdownState('STARTED');
-    setSeconds(getSeconds(inputMinutes, inputSeconds))
+  const handleStart = () => {
+    setSeconds(getTotalOfSeconds(minutesInput.value, secondsInput.value))
+    setState(CLOCK_STATE.RUNNING);
   }
 
-  const handleReset = () =>{
-    setCountdownState('STOPPED');
-    setSeconds(0);
-    setInputMinutes(0);
-    setInputSeconds(0);
+  const handleReset =()=>{
+    minutesInput.reset(INITIAL_SECONDS);
+    secondsInput.reset(INITIAL_SECONDS);
+    setSeconds(INITIAL_SECONDS);
+    setState(CLOCK_STATE.STOPPED);
   }
-
-  const handlePause = () =>{
-    setCountdownState(prev=> prev === 'PAUSE' ? 'STARTED' : 'PAUSE');
-  }
-
 
   return (
     <Fragment>
       <label>
-        <input type="number" value={inputMinutes} onChange={(e)=>{setInputMinutes(e.target.value)}} />
         Minutes
+        <input type="number" value={minutesInput.value} onChange={minutesInput.onChange} />
       </label>
       <label>
-        <input type="number" value={inputSeconds} onChange={(e)=>setInputSeconds(e.target.value)} />
         Seconds
+        <input type="number" value={secondsInput.value} onChange={secondsInput.onChange} />
       </label>
-
+      <br/>
+      <br/>
       <button onClick={handleStart}>START</button>
-      <button onClick={handlePause}>PAUSE / RESUME</button>
+      <button onClick={()=> setState(state === CLOCK_STATE.STOPPED ? CLOCK_STATE.RUNNING : CLOCK_STATE.STOPPED)}>PAUSE / RESUME</button>
       <button onClick={handleReset}>RESET</button>
 
-      <h1 data-testid="running-clock">
-        <Clock totalOfSeconds={seconds} />
-      </h1>
+      <Clock seconds={seconds} />
     </Fragment>
   );
 }
