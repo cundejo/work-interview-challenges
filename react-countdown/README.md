@@ -40,6 +40,4 @@ In order to satisfy the task requirements, you need to implement the following:
    4. Once the countdown reaches `00:00`, stop counting and keep displaying `00:00`.
    5. On a **PAUSE / RESUME** button click, pause or resume the countdown appropriately.
    6. Once the **RESET** button is clicked, both inputs should be reset to 0, and the time displayed in `h1` should be reset to `00:00`.
-
-
-// a good solution here https://codesandbox.io/s/react-countdown-demo-gtr4u?file=/src/App.js
+   
