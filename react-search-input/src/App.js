@@ -1,38 +1,50 @@
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
 
-const debounce = (func, wait) => {
-  let timeout;
-  return function(...args) {
-    const context = this;
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      timeout = null;
-      func.apply(context, args);
-    }, wait);
-  };
-};
-
-const searchBreweries = async (query) => {
-  if(query.length === 0) return [];
-  const response = await fetch(`https://api.openbrewerydb.org/breweries/search?query=${query}`);
-  return await response.json();
+const getBreweries = async (query) => {
+  if(!query) return [];
+  return fetch(`https://api.openbrewerydb.org/breweries/search?query=${query}`).then((res) => res.json())
 }
 
-function App() {
-  const [result, setResult] = useState([]);
+const useBrewery = (initialQuery) => {
+  const [query, setQuery] = useState(initialQuery);
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(undefined);
 
-  const handleChange = debounce(async (e) =>{
-    const breweries = await searchBreweries(e.target.value)
-    setResult(breweries.slice(0,5));
-  }, 300)
+  useEffect(() => {
+    setIsLoading(true);
+    const idTimeout = setTimeout(
+      () => getBreweries(query)
+        .then((data) => {
+          setResults(data.slice(0,5));
+          setIsLoading(false);
+        }).catch(err => setError(err)),
+      300
+    )
+    return () => clearTimeout(idTimeout);
+  }, [query])
 
+  return {results, isLoading, error, onQuery: setQuery};
+}
 
-  return (
+const App = () => {
+  const [inputValue, setInputValue] = useState('');
+  const {results, isLoading, onQuery} = useBrewery();
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+    onQuery(e.target.value)
+  }
+
+  return <>
     <div>
-      <input onChange={handleChange} />
-      {result.map((item)=> <p key={item.id}>{item.name}</p>)}
+      <input value={inputValue} onChange={handleChange} type="text" placeholder="type the name of the brewery"/>
     </div>
-  );
+    <div>{isLoading && 'Loading...'}</div>
+    <div>
+      {results.map((brewery, index)=><p key={index}>{brewery.name}</p>)}
+    </div>
+  </>
 }
 
 export default App;
