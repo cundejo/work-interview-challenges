@@ -1,11 +1,11 @@
 import { Route, Switch } from 'react-router-dom';
 import BookList from './pages/BookList';
 import Book from './pages/Book';
-import useLibrary from './hooks/useLibrary';
+import useBookLibrary from './hooks/useBookLibrary';
 import AppLayout from './layouts/AppLayout';
 
 const App = () => {
-  const [books, loadMore] = useLibrary();
+  const [books, loadMore] = useBookLibrary();
 
   return (
     <AppLayout>
