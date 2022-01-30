@@ -1,5 +1,5 @@
 function solution(A) {
-  const aSorted = A.sort((a,b)=>a-b);
+  const aSorted = A.sort((a, b) => a - b);
 
   if (aSorted[0] !== 1) return 1;
 

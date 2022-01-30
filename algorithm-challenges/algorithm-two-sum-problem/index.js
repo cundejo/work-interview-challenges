@@ -1,8 +1,4 @@
-
-const func = (arr, sum) => {
-
-}
-
+const func = (arr, sum) => {};
 
 console.log(func([3, 5, 2, -4, 8, 11], 7));
 

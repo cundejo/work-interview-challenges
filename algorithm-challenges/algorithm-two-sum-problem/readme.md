@@ -1,4 +1,4 @@
-The two sum problem is a common interview question, and it is a variation of the subset sum problem. There is a 
+The two sum problem is a common interview question, and it is a variation of the subset sum problem. There is a
 
 Find all the pairs of two integers in an unsorted array that sum up to a given S.
 

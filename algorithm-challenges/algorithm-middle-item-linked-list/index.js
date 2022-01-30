@@ -40,4 +40,4 @@ while (fastPointer.next !== null && fastPointer.next.next !== null) {
 }
 
 // slowPointer is now at the middle node in the linked list
-slowPointer.data
+slowPointer.data;
